@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hamza Mostafa | Software Developer & Flutter UI Designer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN for lightweight interactive 3D hero geometry -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Google Fonts: Inter & Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Cairo', 'sans-serif'],
+            arabic: ['Cairo', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            yellowBrand: '#FFD400',
+            yellowHover: '#E5BE00',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #F7F7F5;
+      --bg-surface: #FFFFFF;
+      --border-subtle: rgba(17, 17, 17, 0.08);
+      --text-primary: #111111;
+      --text-muted: rgba(17, 17, 17, 0.72);
+      --yellow-accent: #FFD400;
+      --yellow-text: #8A6D00;
+      --glow-color: rgba(255, 212, 0, 0.22);
+    }
+
+    html.dark {
+      --bg-primary: #09090B;
+      --bg-surface: #121215;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #F4F4F6;
+      --text-muted: rgba(244, 244, 246, 0.72);
+      --yellow-accent: #FFD400;
+      --yellow-text: #FFD400;
+      --glow-color: rgba(255, 212, 0, 0.16);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html[dir="rtl"] body {
+      font-family: 'Cairo', sans-serif;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #FFD400;
+      border-radius: 999px;
+    }
+
+    /* Smooth Surface & Soft Organic Elevations */
+    .soft-surface {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1.25rem;
+      box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.06);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.35s ease,
+                  background-color 0.45s ease;
+    }
+
+    html.dark .soft-surface {
+      box-shadow: 0 14px 34px -14px rgba(0, 0, 0, 0.65);
+    }
+
+    /* 3D Perspective Tilt Cards */
+    .tilt-wrapper {
+      perspective: 1100px;
+    }
+
+    .tilt-card {
+      transform-style: preserve-3d;
+      will-change: transform;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tilt-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        var(--glow-color),
+        transparent 65%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .tilt-card:hover::before {
+      opacity: 1;
+    }
+
+    .tilt-card:hover {
+      border-color: rgba(255, 212, 0, 0.55);
+      box-shadow: 0 22px 44px -16px rgba(0, 0, 0, 0.14), 0 0 24px -6px var(--glow-color);
+    }
+
+    html.dark .tilt-card:hover {
+      box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.85), 0 0 28px -6px rgba(255, 212, 0, 0.22);
+    }
+
+    .tilt-inner {
+      position: relative;
+      z-index: 2;
+      transform: translateZ(18px);
+    }
+
+    /* Ambient Organic Glow Orbs */
+    .ambient-orb {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(85px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      animation: floatSlow 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatSlow {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(24px, -28px, 0) scale(1.08); }
+    }
+
+    /* Hero Entrance & Text Reveal */
+    .hero-stagger {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .hero-delay-1 { animation-delay: 0.08s; }
+    .hero-delay-2 { animation-delay: 0.18s; }
+    .hero-delay-3 { animation-delay: 0.28s; }
+    .hero-delay-4 { animation-delay: 0.38s; }
+    .hero-delay-5 { animation-delay: 0.48s; }
+
+    @keyframes heroReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Floating Tech Badges around 3D Hero Stage */
+    .floating-chip {
+      animation: chipBob 5.5s ease-in-out infinite;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .floating-chip-alt {
+      animation: chipBob 6.8s ease-in-out infinite reverse;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    @keyframes chipBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-9px); }
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Navigation Link Underline Indicator */
+    .nav-link {
+      position: relative;
+      padding-block: 0.35rem;
+    }
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      inset-inline-start: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #FFD400;
+      border-radius: 999px;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    html[dir="rtl"] .nav-link::after {
+      transform-origin: left;
+    }
+    .nav-link:hover::after,
+    .nav-link.active-nav::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    html[dir="rtl"] .nav-link:hover::after,
+    html[dir="rtl"] .nav-link.active-nav::after {
+      transform-origin: right;
+    }
+
+    /* Magnetic Fluid Button */
+    .magnetic-btn {
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      will-change: transform;
+    }
+
+    /* Scroll Progress Bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      inset-inline-start: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #FFD400, #F59E0B);
+      width: 0%;
+      z-index: 60;
+      transition: width 0.1s linear;
+    }
+
+    /* Respect Reduced Motion Preferences */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-[#FFD400] selection:text-black overflow-x-hidden">
+
+  <!-- Top Scroll Progress Line -->
+  <div id="scroll-progress"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-24 right-5 rtl:right-auto rtl:left-5 z-[100] flex flex-col gap-2.5 pointer-events-none"></div>
+
+  <!-- Navigation Bar -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-black/[0.07] dark:border-white/[0.08] bg-[#F7F7F5]/80 dark:bg-[#09090B]/80 backdrop-blur-xl transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <a href="#home" class="flex items-center gap-3.5 group">
+          <div class="w-10 h-10 rounded-xl bg-[#FFD400] text-black font-black text-base flex items-center justify-center tracking-tighter shadow-md shadow-[#FFD400]/25 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+            HM
+          </div>
+          <div>
+            <span class="font-bold text-sm tracking-tight block leading-tight" data-i18n="nav_name">Hamza Mostafa</span>
+            <span class="text-[10px] font-semibold text-[#8A6D00] dark:text-[#FFD400] uppercase tracking-widest block" data-i18n="nav_tag">Developer</span>
+          </div>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider">
+          <a href="#about" class="nav-link hover:text-[#8A6D00] dark:hover:text-[#FFD400] transition-colors" data-i18n="nav_about">About</a>
+          <a href="#skills" class="nav-link hover:text-[#8A6D00] dark:hover:text-[#FFD400] transition-colors" data-i18n="nav_skills">Skills</a>
+          <a href="#projects" class="nav-link hover:text-[#8A6D00] dark:hover:text-[#FFD400] transition-colors" data-i18n="nav_projects">Projects</a>
+          <a href="#leadership" class="nav-link hover:text-[#8A6D00] dark:hover:text-[#FFD400] transition-colors" data-i18n="nav_leadership">Activities & Sports</a>
+          <a href="#blog" class="nav-link hover:text-[#8A6D00] dark:hover:text-[#FFD400] transition-colors" data-i18n="nav_blog">Blog</a>
+          <a href="#contact" class="nav-link hover:text-[#8A6D00] dark:hover:text-[#FFD400] transition-colors" data-i18n="nav_contact">Contact</a>
+        </nav>
+
+        <!-- Action Controls -->
+        <div class="flex items-center gap-2.5">
+          <!-- Language Toggle -->
+          <button id="lang-toggle" onclick="toggleLanguage()" class="px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all flex items-center gap-1.5 shadow-sm" title="Switch Language">
+            <i class="fa-solid fa-globe text-[#8A6D00] dark:text-[#FFD400]"></i>
+            <span id="lang-label">AR</span>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" onclick="toggleTheme()" class="p-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all shadow-sm" aria-label="Toggle Theme">
+            <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+          </button>
+
+          <!-- Mobile Hamburger -->
+          <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215]" aria-label="Menu">
+            <i class="fa-solid fa-bars text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-black/10 dark:border-white/10 bg-white/95 dark:bg-[#09090B]/95 backdrop-blur-xl px-6 py-5 space-y-3 text-sm font-semibold uppercase tracking-wider">
+      <a href="#about" onclick="closeMobileMenu()" class="block py-2 hover:text-[#FFD400]" data-i18n="nav_about">About</a>
+      <a href="#skills" onclick="closeMobileMenu()" class="block py-2 hover:text-[#FFD400]" data-i18n="nav_skills">Skills</a>
+      <a href="#projects" onclick="closeMobileMenu()" class="block py-2 hover:text-[#FFD400]" data-i18n="nav_projects">Projects</a>
+      <a href="#leadership" onclick="closeMobileMenu()" class="block py-2 hover:text-[#FFD400]" data-i18n="nav_leadership">Activities & Sports</a>
+      <a href="#blog" onclick="closeMobileMenu()" class="block py-2 hover:text-[#FFD400]" data-i18n="nav_blog">Blog</a>
+      <a href="#contact" onclick="closeMobileMenu()" class="block py-2 hover:text-[#FFD400]" data-i18n="nav_contact">Contact</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-20">
+
+    <!-- HERO SECTION WITH INTERACTIVE 3D STAGE -->
+    <section id="home" class="relative py-20 sm:py-28 lg:py-36 border-b border-black/[0.07] dark:border-white/[0.08] overflow-hidden">
+      <!-- Soft Ambient Lighting -->
+      <div class="ambient-orb w-80 h-80 bg-[#FFD400]/25 -top-16 -left-16"></div>
+      <div class="ambient-orb w-96 h-96 bg-[#FFD400]/15 bottom-0 right-10" style="animation-delay: -5s;"></div>
+
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          <!-- Left Column: Typography & CTA -->
+          <div class="lg:col-span-7 space-y-7">
+            <div class="hero-stagger hero-delay-1 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-[#FFD400] text-black shadow-sm shadow-[#FFD400]/30">
+              <span class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
+              <span>ElSewedy International School</span>
+            </div>
+
+            <h1 class="hero-stagger hero-delay-2 text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08]">
+              <span data-i18n="hero_greeting">Hi, I'm</span> <span class="text-[#8A6D00] dark:text-[#FFD400]" data-i18n="hero_name">Hamza Mostafa</span>
+            </h1>
+
+            <p class="hero-stagger hero-delay-3 text-base sm:text-xl font-bold uppercase tracking-wide opacity-90" data-i18n="hero_roles">
+              Software Developer | Flutter UI Designer | Web Developer
+            </p>
+
+            <p class="hero-stagger hero-delay-4 text-base sm:text-lg opacity-75 max-w-2xl leading-relaxed" data-i18n="hero_summary">
+              Programming and Artificial Intelligence student at ElSewedy International School of Applied Technology (Class of 2027). Passionate about engineering clean backend APIs with ASP.NET Core and building practical mobile interfaces with Flutter.
+            </p>
+
+            <div class="hero-stagger hero-delay-5 flex flex-wrap items-center gap-4 pt-2">
+              <a href="#projects" class="magnetic-btn px-7 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest bg-[#FFD400] text-black hover:bg-[#E5BE00] shadow-lg shadow-[#FFD400]/20 flex items-center gap-2.5">
+                <i class="fa-solid fa-code"></i>
+                <span data-i18n="hero_cta_projects">Explore Projects</span>
+              </a>
+              <a href="#contact" class="magnetic-btn px-7 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest border border-black/20 dark:border-white/20 bg-white/70 dark:bg-white/[0.04] hover:border-[#FFD400] hover:bg-[#FFD400]/10 transition-all flex items-center gap-2.5">
+                <i class="fa-regular fa-paper-plane text-[#8A6D00] dark:text-[#FFD400]"></i>
+                <span data-i18n="hero_cta_contact">Get in Touch</span>
+              </a>
+              <a href="https://github.com/HamzaMoza2009" target="_blank" rel="noopener noreferrer" class="magnetic-btn p-3.5 rounded-xl border border-black/20 dark:border-white/20 bg-white/70 dark:bg-white/[0.04] hover:bg-[#FFD400] hover:text-black hover:border-[#FFD400] transition-all" aria-label="GitHub">
+                <i class="fa-brands fa-github text-base"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive 3D Tech Core Stage -->
+          <div class="lg:col-span-5 relative flex items-center justify-center">
+            <div id="hero-3d-stage" class="relative w-full max-w-[420px] h-[340px] sm:h-[400px] rounded-3xl soft-surface flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing">
+              <!-- Subtle radial inner spotlight -->
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,212,0,0.16),transparent_70%)] pointer-events-none"></div>
+              
+              <!-- Three.js WebGL Canvas Container -->
+              <div id="three-canvas-container" class="w-full h-full"></div>
+
+              <!-- Floating 3D-layered Tech Pills -->
+              <div class="floating-chip absolute top-5 left-5 px-3.5 py-2 rounded-xl bg-white/85 dark:bg-[#18181C]/85 border border-black/10 dark:border-white/10 shadow-lg flex items-center gap-2 text-xs font-bold pointer-events-none">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#FFD400]"></span>
+                <span>ASP.NET Core</span>
+              </div>
+
+              <div class="floating-chip-alt absolute bottom-6 left-6 px-3.5 py-2 rounded-xl bg-white/85 dark:bg-[#18181C]/85 border border-black/10 dark:border-white/10 shadow-lg flex items-center gap-2 text-xs font-bold pointer-events-none">
+                <i class="fa-solid fa-mobile-screen text-[#8A6D00] dark:text-[#FFD400]"></i>
+                <span>Flutter & Dart</span>
+              </div>
+
+              <div class="floating-chip absolute top-1/2 -translate-y-1/2 right-4 px-3.5 py-2 rounded-xl bg-white/85 dark:bg-[#18181C]/85 border border-black/10 dark:border-white/10 shadow-lg flex items-center gap-2 text-xs font-bold pointer-events-none">
+                <i class="fa-solid fa-database text-[#8A6D00] dark:text-[#FFD400]"></i>
+                <span>C# / SQL</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT & EDUCATION SECTION -->
+    <section id="about" class="py-24 sm:py-28 max-w-7xl mx-auto px-6 sm:px-8 reveal border-b border-black/[0.07] dark:border-white/[0.08]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <div class="lg:col-span-7 space-y-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400]" data-i18n="about_subtitle">Background</span>
+            <h2 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight" data-i18n="about_title">About Me & Education</h2>
+          </div>
+
+          <p class="text-base sm:text-lg opacity-80 leading-relaxed" data-i18n="about_bio_text">
+            I am a Programming and Artificial Intelligence student at ElSewedy International School of Applied Technology, passionate about software development, mobile application development, and building practical digital solutions. I continuously work on improving my technical skills through academic projects, hands-on practice, and collaborative work.
+          </p>
+
+          <div class="tilt-wrapper">
+            <div class="soft-surface tilt-card p-6 sm:p-7">
+              <div class="tilt-inner flex items-start gap-4">
+                <div class="w-12 h-12 bg-[#FFD400] text-black font-bold flex items-center justify-center text-lg shrink-0 rounded-xl shadow-sm">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                  <span class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400]" data-i18n="edu_grad">Expected Graduation: 2027</span>
+                  <h3 class="text-lg font-bold mt-2.5" data-i18n="edu_school">ElSewedy International School of Applied Technology</h3>
+                  <p class="text-xs font-semibold opacity-70 mt-1" data-i18n="edu_track">Programming & Artificial Intelligence Track</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-6">
+          <div class="soft-surface p-6 sm:p-7">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400] mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-compass"></i>
+              <span data-i18n="interests_heading">Professional Interests</span>
+            </h3>
+            <div id="interests-list" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div class="soft-surface p-6 sm:p-7">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400] mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-bolt"></i>
+              <span data-i18n="strengths_heading">Personal Strengths</span>
+            </h3>
+            <div id="strengths-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL SKILLS SECTION -->
+    <section id="skills" class="py-24 sm:py-28 max-w-7xl mx-auto px-6 sm:px-8 reveal border-b border-black/[0.07] dark:border-white/[0.08]">
+      <div class="max-w-3xl mb-14">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400]" data-i18n="skills_subtitle">Expertise</span>
+        <h2 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight" data-i18n="skills_title">Technical Skills</h2>
+        <p class="text-sm opacity-75 mt-3" data-i18n="skills_desc">Core technologies, frameworks, and architecture patterns I use in development.</p>
+      </div>
+
+      <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects" class="py-24 sm:py-28 max-w-7xl mx-auto px-6 sm:px-8 reveal border-b border-black/[0.07] dark:border-white/[0.08]">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400]" data-i18n="projects_subtitle">Portfolio</span>
+          <h2 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight" data-i18n="projects_title">Projects & Case Studies</h2>
+        </div>
+
+        <div id="project-filters" class="flex flex-wrap gap-2">
+          <button onclick="filterProjects('all')" data-filter="all" class="filter-btn active px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#FFD400] text-black shadow-sm transition-all" data-i18n="filter_all">All Projects</button>
+          <button onclick="filterProjects('backend')" data-filter="backend" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all" data-i18n="filter_backend">Backend / .NET</button>
+          <button onclick="filterProjects('mobile')" data-filter="mobile" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all" data-i18n="filter_mobile">Mobile / Flutter</button>
+          <button onclick="filterProjects('systems')" data-filter="systems" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all" data-i18n="filter_systems">UI/UX & Systems</button>
+        </div>
+      </div>
+
+      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+    </section>
+
+    <!-- LEADERSHIP & SPORTS SECTION -->
+    <section id="leadership" class="py-24 sm:py-28 max-w-7xl mx-auto px-6 sm:px-8 reveal border-b border-black/[0.07] dark:border-white/[0.08]">
+      <div class="max-w-3xl mb-14">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400]" data-i18n="lead_subtitle">Activities</span>
+        <h2 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight" data-i18n="lead_title">Leadership, Initiatives & Sports</h2>
+        <p class="text-sm opacity-75 mt-3" data-i18n="lead_desc">Student leadership roles, community organizing, school initiatives, and athletic achievements.</p>
+      </div>
+
+      <div class="flex gap-2.5 sm:gap-3.5 mb-10 flex-wrap">
+        <button onclick="switchAchievementTab('leadership')" id="tab-leadership" class="ach-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#FFD400] text-black shadow-sm transition-all flex items-center gap-2">
+          <i class="fa-solid fa-users-gear"></i>
+          <span data-i18n="tab_leadership">Student Leadership</span>
+        </button>
+        <button onclick="switchAchievementTab('initiatives')" id="tab-initiatives" class="ach-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all flex items-center gap-2">
+          <i class="fa-solid fa-hand-holding-heart text-[#8A6D00] dark:text-[#FFD400]"></i>
+          <span data-i18n="tab_initiatives">School Initiatives</span>
+        </button>
+        <button onclick="switchAchievementTab('sports')" id="tab-sports" class="ach-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-[#8A6D00] dark:text-[#FFD400]"></i>
+          <span data-i18n="tab_sports">Sports Achievements</span>
+        </button>
+      </div>
+
+      <div id="achievements-content" class="grid grid-cols-1 md:grid-cols-3 gap-7"></div>
+    </section>
+
+    <!-- BLOG SECTION -->
+    <section id="blog" class="py-24 sm:py-28 max-w-7xl mx-auto px-6 sm:px-8 reveal border-b border-black/[0.07] dark:border-white/[0.08]">
+      <div class="mb-12">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400]" data-i18n="blog_subtitle">Articles</span>
+        <h2 class="text-3xl sm:text-4xl font-black mt-2 tracking-tight" data-i18n="blog_title">Articles & Dev Notes</h2>
+      </div>
+
+      <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-7"></div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-24 sm:py-28 max-w-7xl mx-auto px-6 sm:px-8 reveal">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-5 space-y-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-[#8A6D00] dark:text-[#FFD400]" data-i18n="contact_subtitle">Get in Touch</span>
+          <h2 class="text-3xl sm:text-4xl font-black tracking-tight" data-i18n="contact_title">Let's Connect</h2>
+          <p class="text-sm opacity-75 leading-relaxed" data-i18n="contact_desc">
+            Have a project idea, collaboration opportunity, or question about software development? Feel free to reach out via WhatsApp or email.
+          </p>
+
+          <div class="space-y-4 pt-2">
+            <div class="soft-surface flex items-center gap-4 p-4">
+              <div class="w-11 h-11 rounded-xl bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400] flex items-center justify-center text-base shrink-0 font-bold">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[10px] font-bold uppercase tracking-widest opacity-60" data-i18n="contact_email_label">Email</div>
+                <a href="mailto:hm2532054@gmail.com" class="font-bold text-sm hover:text-[#8A6D00] dark:hover:text-[#FFD400] truncate block">hm2532054@gmail.com</a>
+              </div>
+              <button onclick="copyText('hm2532054@gmail.com')" class="p-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors" title="Copy">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+
+            <div class="soft-surface flex items-center gap-4 p-4">
+              <div class="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base shrink-0 font-bold">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[10px] font-bold uppercase tracking-widest opacity-60" data-i18n="contact_phone_label">WhatsApp</div>
+                <a href="https://wa.me/201104872361" target="_blank" rel="noopener noreferrer" dir="ltr" class="font-bold text-sm hover:text-emerald-500 block">+20 110 487 2361</a>
+              </div>
+            </div>
+
+            <div class="soft-surface flex items-center gap-4 p-4">
+              <div class="w-11 h-11 rounded-xl bg-[#111111] dark:bg-white text-white dark:text-black flex items-center justify-center text-base shrink-0 font-bold">
+                <i class="fa-brands fa-github"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[10px] font-bold uppercase tracking-widest opacity-60">GitHub</div>
+                <a href="https://github.com/HamzaMoza2009" target="_blank" rel="noopener noreferrer" class="font-bold text-sm hover:text-[#8A6D00] dark:hover:text-[#FFD400] truncate block">github.com/HamzaMoza2009</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <form id="contact-form" onsubmit="handleContactSubmit(event)" class="soft-surface p-7 sm:p-9 space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider opacity-70 mb-2" data-i18n="form_name">Your Name</label>
+                <input type="text" id="sender-name" required class="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] dark:bg-[#09090B] border border-black/10 dark:border-white/10 focus:border-[#FFD400] focus:outline-none transition-colors text-sm" placeholder="Ahmed Ali" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider opacity-70 mb-2" data-i18n="form_email">Your Email</label>
+                <input type="email" id="sender-email" required class="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] dark:bg-[#09090B] border border-black/10 dark:border-white/10 focus:border-[#FFD400] focus:outline-none transition-colors text-sm" placeholder="ahmed@example.com" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider opacity-70 mb-2" data-i18n="form_subject">Subject</label>
+              <input type="text" id="sender-subject" required class="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] dark:bg-[#09090B] border border-black/10 dark:border-white/10 focus:border-[#FFD400] focus:outline-none transition-colors text-sm" placeholder="Project Collaboration" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider opacity-70 mb-2" data-i18n="form_message">Message</label>
+              <textarea id="sender-message" rows="4" required class="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] dark:bg-[#09090B] border border-black/10 dark:border-white/10 focus:border-[#FFD400] focus:outline-none transition-colors text-sm" placeholder="Write your message here..."></textarea>
+            </div>
+
+            <button type="submit" class="magnetic-btn w-full py-4 px-6 rounded-xl font-bold text-xs uppercase tracking-widest bg-[#FFD400] hover:bg-[#E5BE00] text-black shadow-lg shadow-[#FFD400]/20 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span data-i18n="form_submit">Send Message to Hamza</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-black/[0.07] dark:border-white/[0.08] py-8 bg-white/60 dark:bg-[#09090B]">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold uppercase tracking-wider opacity-75">
+      <div class="flex items-center gap-2">
+        <span class="font-bold" data-i18n="nav_name">Hamza Mostafa</span>
+        <span>•</span>
+        <span data-i18n="footer_rights">All rights reserved © 2026</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/HamzaMoza2009" target="_blank" rel="noopener noreferrer" class="hover:text-[#FFD400] transition-colors"><i class="fa-brands fa-github text-base"></i></a>
+        <a href="mailto:hm2532054@gmail.com" class="hover:text-[#FFD400] transition-colors"><i class="fa-solid fa-envelope text-base"></i></a>
+        <a href="https://wa.me/201104872361" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-500 transition-colors"><i class="fa-brands fa-whatsapp text-base"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="https://wa.me/201104872361" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="magnetic-btn fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-40 flex items-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 text-black px-4 py-3 rounded-full shadow-xl font-bold text-xs uppercase tracking-wider">
+    <i class="fa-brands fa-whatsapp text-lg"></i>
+    <span class="hidden sm:inline" data-i18n="whatsapp_btn">WhatsApp Me</span>
+  </a>
+
+  <!-- MODAL: PROJECT / BLOG DETAILS -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-md transition-opacity">
+    <div class="soft-surface relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-7 sm:p-9 shadow-2xl">
+      <button onclick="closeDetailModal()" class="absolute top-5 right-5 rtl:right-auto rtl:left-5 w-9 h-9 rounded-xl bg-black/5 dark:bg-white/10 hover:bg-[#FFD400] hover:text-black flex items-center justify-center transition-colors">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="detail-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const translations = {
+      en: {
+        nav_name: "Hamza Mostafa",
+        nav_tag: "Developer",
+        nav_about: "About",
+        nav_skills: "Skills",
+        nav_projects: "Projects",
+        nav_leadership: "Activities & Sports",
+        nav_blog: "Blog",
+        nav_contact: "Contact",
+        hero_greeting: "Hi, I'm",
+        hero_name: "Hamza Mostafa",
+        hero_roles: "Software Developer | Flutter UI Designer | Web Developer",
+        hero_summary: "Programming and Artificial Intelligence student at ElSewedy International School of Applied Technology (Class of 2027). Passionate about engineering clean backend APIs with ASP.NET Core and building practical mobile interfaces with Flutter.",
+        hero_cta_projects: "Explore Projects",
+        hero_cta_contact: "Get in Touch",
+        about_subtitle: "Background",
+        about_title: "About Me & Education",
+        about_bio_text: "I am a Programming and Artificial Intelligence student at ElSewedy International School of Applied Technology, passionate about software development, mobile application development, and building practical digital solutions. I continuously work on improving my technical skills through academic projects, hands-on practice, and collaborative work.",
+        edu_grad: "Expected Graduation: 2027",
+        edu_school: "ElSewedy International School of Applied Technology",
+        edu_track: "Programming & Artificial Intelligence Track",
+        interests_heading: "Professional Interests",
+        strengths_heading: "Personal Strengths",
+        skills_subtitle: "Expertise",
+        skills_title: "Technical Skills",
+        skills_desc: "Core technologies, frameworks, and architecture patterns I use in development.",
+        projects_subtitle: "Portfolio",
+        projects_title: "Projects & Case Studies",
+        filter_all: "All Projects",
+        filter_backend: "Backend / .NET",
+        filter_mobile: "Mobile / Flutter",
+        filter_systems: "UI/UX & Systems",
+        lead_subtitle: "Activities",
+        lead_title: "Leadership, Initiatives & Sports",
+        lead_desc: "Student leadership roles, community organizing, school initiatives, and athletic achievements.",
+        tab_leadership: "Student Leadership",
+        tab_initiatives: "School Initiatives",
+        tab_sports: "Sports Achievements",
+        blog_subtitle: "Articles",
+        blog_title: "Articles & Dev Notes",
+        contact_subtitle: "Get in Touch",
+        contact_title: "Let's Connect",
+        contact_desc: "Have a project idea, collaboration opportunity, or question about software development? Feel free to reach out via WhatsApp or email.",
+        contact_email_label: "Email",
+        contact_phone_label: "WhatsApp",
+        form_name: "Your Name",
+        form_email: "Your Email",
+        form_subject: "Subject",
+        form_message: "Message",
+        form_submit: "Send Message to Hamza",
+        footer_rights: "All rights reserved © 2026",
+        whatsapp_btn: "WhatsApp Me",
+        view_details: "View Details",
+        read_article: "Read Article"
+      },
+      ar: {
+        nav_name: "حمزة مصطفى",
+        nav_tag: "مطور برمجيات",
+        nav_about: "نبذة عني",
+        nav_skills: "المهارات",
+        nav_projects: "المشاريع",
+        nav_leadership: "الأنشطة والرياضة",
+        nav_blog: "المدونة",
+        nav_contact: "تواصل معي",
+        hero_greeting: "أهلاً، أنا",
+        hero_name: "حمزة مصطفى",
+        hero_roles: "مطور برمجيات | مصمم واجهات Flutter | مطور ويب",
+        hero_summary: "طالب في مسار البرمجة والذكاء الاصطناعي بمدرسة السويدي الدولية للتكنولوجيا التطبيقية (دفعة 2027). شغوف ببناء واجهات برمجة تطبيقات قوية باستخدام ASP.NET Core وتصميم تطبيقات موبايل عصرية باستخدام Flutter.",
+        hero_cta_projects: "استكشف المشاريع",
+        hero_cta_contact: "تواصل معي",
+        about_subtitle: "الخلفية",
+        about_title: "نبذة عني والتعليم",
+        about_bio_text: "أنا طالب في مسار البرمجة والذكاء الاصطناعي بمدرسة السويدي الدولية للتكنولوجيا التطبيقية، شغوف بتطوير البرمجيات وتطبيقات الهواتف الذكية وبناء حلول رقمية عملية. أعمل باستمرار على تطوير مهاراتي التقنية من خلال المشاريع الأكاديمية والتطبيق العملي والعمل الجماعي.",
+        edu_grad: "التخرج المتوقع: 2027",
+        edu_school: "مدرسة السويدي الدولية للتكنولوجيا التطبيقية",
+        edu_track: "تخصص البرمجة والذكاء الاصطناعي",
+        interests_heading: "الاهتمامات المهنية",
+        strengths_heading: "نقاط القوة الشخصية",
+        skills_subtitle: "الخبرات",
+        skills_title: "المهارات التقنية",
+        skills_desc: "أهم التقنيات والأطر وأنماط التصميم التي أستخدمها في التطوير.",
+        projects_subtitle: "الأعمال",
+        projects_title: "المشاريع ودراسات الحالة",
+        filter_all: "كل المشاريع",
+        filter_backend: "باك إند / .NET",
+        filter_mobile: "موبايل / Flutter",
+        filter_systems: "تجربة المستخدم والأنظمة",
+        lead_subtitle: "الأنشطة",
+        lead_title: "القيادة الطلابية والمبادرات والرياضة",
+        lead_desc: "الأدوار القيادية الطلابية، وتنظيم المجتمع، والمبادرات المدرسية، والإنجازات الرياضية.",
+        tab_leadership: "القيادة الطلابية",
+        tab_initiatives: "المبادرات المدرسية",
+        tab_sports: "الإنجازات الرياضية",
+        blog_subtitle: "المقالات",
+        blog_title: "المقالات والملاحظات البرمجية",
+        contact_subtitle: "لنتواصل",
+        contact_title: "تواصل معي",
+        contact_desc: "لديك فكرة مشروع أو فرصة تعاون أو استفسار برمجي؟ تواصل معي عبر الواتساب أو البريد الإلكتروني.",
+        contact_email_label: "البريد الإلكتروني",
+        contact_phone_label: "واتساب",
+        form_name: "الاسم بالكامل",
+        form_email: "البريد الإلكتروني",
+        form_subject: "الموضوع",
+        form_message: "الرسالة",
+        form_submit: "إرسال الرسالة إلى حمزة",
+        footer_rights: "جميع الحقوق محفوظة © 2026",
+        whatsapp_btn: "راسلني واتساب",
+        view_details: "التفاصيل",
+        read_article: "اقرأ المقال"
+      }
+    };
+
+    const interestsData = [
+      { en: "Software Engineering", ar: "هندسة البرمجيات" },
+      { en: "Mobile App Development", ar: "تطوير تطبيقات الموبايل" },
+      { en: "Flutter Development", ar: "تطوير Flutter" },
+      { en: "Backend Development", ar: "تطوير الخلفية (Backend)" },
+      { en: "Artificial Intelligence", ar: "الذكاء الاصطناعي" },
+      { en: "UI/UX Design", ar: "تصميم واجهة وتجربة المستخدم" },
+      { en: "Full-Stack Applications", ar: "تطبيقات Full-Stack" }
+    ];
+
+    const strengthsData = [
+      { en: "Leadership & Teamwork", ar: "القيادة والعمل الجماعي" },
+      { en: "Communication & Coordination", ar: "التواصل والتنسيق" },
+      { en: "Problem-Solving", ar: "حل المشكلات" },
+      { en: "Creativity & Initiative", ar: "الإبداع والمبادرة" },
+      { en: "Continuous Learning", ar: "التعلم المستمر" },
+      { en: "Organization & Responsibility", ar: "التنظيم والمسؤولية" }
+    ];
+
+    const skillsCategories = [
+      {
+        icon: "fa-server",
+        title: { en: "Backend & Databases", ar: "الباك إند وقواعد البيانات" },
+        skills: ["C#", "ASP.NET Core", "RESTful APIs", "Entity Framework Core", "SQL & SQL Server", "LINQ", "CRUD Operations"]
+      },
+      {
+        icon: "fa-mobile-screen-button",
+        title: { en: "Mobile, Web & UI/UX", ar: "تطبيقات الموبايل والويب" },
+        skills: ["Flutter & Dart", "HTML & CSS", "Responsive User Interfaces", "UI Design & Testing"]
+      },
+      {
+        icon: "fa-cubes",
+        title: { en: "Software Architecture", ar: "هندسة البرمجيات والأنماط" },
+        skills: ["Object-Oriented Programming (OOP)", "Dependency Injection", "Repository Pattern & Unit of Work", "Git & GitHub"]
+      }
+    ];
+
+    const projectsData = [
+      {
+        id: "proj-1",
+        category: "systems",
+        badge: { en: "Team W052515 • Sprint 1", ar: "فريق W052515 • المرحلة الأولى" },
+        title: { en: "Centralized Task Management System", ar: "نظام إدارة المهام المركزي" },
+        desc: {
+          en: "Participated as a UX/Usability Tester focusing on reviewing user experience, workflow baseline, and usability testing across Sprint 1 deliverables.",
+          ar: "شاركت كمختبر لتجربة المستخدم وقابلية الاستخدام، مع التركيز على مراجعة تدفق العمل وتحسين تجربة المستخدم ضمن فريق W052515."
+        },
+        details: {
+          en: "Role: UX/Usability Tester | Team Code: W052515 | Sprint 1: Requirements & Workflow Baseline. Evaluated user journeys, identified friction points, and validated interface clarity.",
+          ar: "الدور: مختبر تجربة المستخدم | كود الفريق: W052515 | سبرنت 1: تحديد المتطلبات وخط أساس سير العمل وتجربة الاستخدام."
+        },
+        tags: ["UX Testing", "Usability", "Workflow Design", "Team W052515"]
+      },
+      {
+        id: "proj-2",
+        category: "mobile",
+        badge: { en: "Mobile UI & APIs", ar: "واجهات موبايل وربط API" },
+        title: { en: "Flutter Applications Suite", ar: "تطبيقات موبايل باستخدام Flutter" },
+        desc: {
+          en: "Built responsive mobile interfaces utilizing reusable widgets, custom UI components, form validation, ListView, GridView, and REST API integration.",
+          ar: "بناء واجهات تطبيقات هواتف ذكية متجاوبة باستخدام مكونات قابلة لإعادة الاستخدام، والتحقق من المدخلات، وربط واجهات برمجة التطبيقات."
+        },
+        details: {
+          en: "Focused on clean widget architecture in Dart & Flutter. Implemented dynamic lists, interactive forms with validation, and asynchronous API data fetching.",
+          ar: "التركيز على هيكلة الـ Widgets النظيفة بلغة Dart و Flutter، وتنفيذ القوائم الديناميكية والنماذج التفاعلية."
+        },
+        tags: ["Flutter", "Dart", "REST API", "Reusable Widgets", "Responsive UI"]
+      },
+      {
+        id: "proj-3",
+        category: "backend",
+        badge: { en: "Clean Architecture", ar: "هندسة برمجيات نظيفة" },
+        title: { en: "ASP.NET Core Web API Projects", ar: "مشاريع ASP.NET Core Web API" },
+        desc: {
+          en: "Engineered scalable RESTful APIs integrating SQL Server via Entity Framework Core, implementing DTOs, Repository Pattern, Unit of Work, and Dependency Injection.",
+          ar: "تطوير واجهات برمجة تطبيقات RESTful قوية مع ربط قواعد البيانات عبر Entity Framework Core وتطبيق Repository Pattern و Dependency Injection."
+        },
+        details: {
+          en: "Built structured backend services in C# and ASP.NET Core featuring full CRUD operations, LINQ queries, clean separation of concerns, and Repository/Unit of Work patterns.",
+          ar: "بناء خدمات خلفية منظمة بلغة C# و ASP.NET Core تدعم عمليات CRUD واستعلامات LINQ."
+        },
+        tags: ["C#", "ASP.NET Core", "EF Core", "Repository Pattern", "SQL Server"]
+      },
+      {
+        id: "proj-4",
+        category: "backend",
+        badge: { en: "Case Study", ar: "دراسة حالة" },
+        title: { en: "Company Employee Case Study", ar: "نظام إدارة موظفي الشركة" },
+        desc: {
+          en: "Backend & database case study modeling employee records, departments, roles, and structured CRUD operations.",
+          ar: "دراسة حالة لتصميم قاعدة بيانات ونظام إدارة سجلات الموظفين والأقسام والصلاحيات."
+        },
+        details: {
+          en: "Designed relational schemas and business logic for managing employee profiles, department assignments, and reporting queries.",
+          ar: "تصميم الجداول العلائقية ومنطق الأعمال لإدارة ملفات الموظفين وتوزيع الأقسام."
+        },
+        tags: ["C#", "SQL", "OOP", "CRUD"]
+      },
+      {
+        id: "proj-5",
+        category: "systems",
+        badge: { en: "System Design", ar: "تصميم أنظمة" },
+        title: { en: "School Management System", ar: "نظام إدارة المدرسة" },
+        desc: {
+          en: "Comprehensive academic management application handling student enrollment, classes, attendance, and grading workflows.",
+          ar: "نظام إدارة أكاديمي متكامل لتنظيم بيانات الطلاب والفصول الدراسية والحضور والتقييمات."
+        },
+        details: {
+          en: "Modeled core school entities (Students, Teachers, Courses, Grades) applying Object-Oriented Programming principles.",
+          ar: "نمذجة الكيانات المدرسية الأساسية بتطبيق مبادئ البرمجة كائنية التوجه OOP."
+        },
+        tags: ["C#", "OOP", "SQL Server", "System Architecture"]
+      },
+      {
+        id: "proj-6",
+        category: "mobile",
+        badge: { en: "App Concept", ar: "نموذج تطبيق" },
+        title: { en: "Uber Ride Booking System", ar: "نظام حجز رحلات (محاكاة Uber)" },
+        desc: {
+          en: "Practice system simulating ride requests, driver matching, fare calculation, and trip status tracking.",
+          ar: "نظام تطبيقي يحاكي طلب الرحلات، وربط السائقين بالركاب، وحساب التكلفة، وتتبع حالة الرحلة."
+        },
+        details: {
+          en: "Explored state transitions, user/driver flows, and clean UI layouts for real-time ride booking scenarios.",
+          ar: "استكشاف تدفقات المستخدم والسائق وتصميم واجهات واضحة لسيناريوهات حجز الرحلات."
+        },
+        tags: ["Flutter", "System Logic", "UI Design"]
+      }
+    ];
+
+    const blogData = [
+      {
+        id: "blog-1",
+        category: "Backend / .NET",
+        date: "Oct 2026",
+        title: {
+          en: "Implementing Repository Pattern & Unit of Work in ASP.NET Core",
+          ar: "تطبيق Repository Pattern و Unit of Work في ASP.NET Core"
+        },
+        content: {
+          en: "When building scalable RESTful APIs in ASP.NET Core, separating data access logic from business controllers is essential. By combining Entity Framework Core with the Repository Pattern, Dependency Injection, and DTOs, our code becomes cleaner, easier to test, and far simpler to maintain.",
+          ar: "عند بناء واجهات برمجة تطبيقات قابلة للتوسع في ASP.NET Core، يُعد فصل منطق الوصول للبيانات عن وحدات التحكم أمراً أساسياً. من خلال دمج Entity Framework Core مع Repository Pattern و Dependency Injection، يصبح الكود أكثر نظافة وسهولة في الصيانة."
+        }
+      },
+      {
+        id: "blog-2",
+        category: "Flutter UI",
+        date: "Sep 2026",
+        title: {
+          en: "Designing Reusable Widgets & Responsive Layouts in Flutter",
+          ar: "تصميم مكونات قابلة لإعادة الاستخدام وواجهات متجاوبة في Flutter"
+        },
+        content: {
+          en: "One of Flutter's greatest strengths is its compositional widget tree. Breaking down complex screens into small, reusable custom widgets improves performance and readability across different mobile screen sizes.",
+          ar: "تُعد شجرة الـ Widgets المرنة من أقوى مميزات Flutter. تقسيم الشاشات المعقدة إلى مكونات صغيرة قابلة لإعادة الاستخدام يحسن الأداء وقابلية القراءة عبر مختلف أحجام الشاشات."
+        }
+      },
+      {
+        id: "blog-3",
+        category: "Leadership & Growth",
+        date: "Aug 2026",
+        title: {
+          en: "Balancing Software Engineering with Student Leadership & Sports",
+          ar: "الموازنة بين هندسة البرمجيات والقيادة الطلابية والرياضة"
+        },
+        content: {
+          en: "Serving as School Social & Sports Rapporteur and founding the Bulbuls community taught me that software engineering relies heavily on communication, teamwork, and coordination—the exact same values that helped Bulbuls FC win the school football league championship.",
+          ar: "علمتني تجربتي كمقرر للجنة الاجتماعية والرياضية وتأسيس مجتمع Bulbuls أن هندسة البرمجيات الناجحة تعتمد على التواصل والعمل الجماعي والتنسيق."
+        }
+      }
+    ];
+
+    const achievementsData = {
+      leadership: [
+        {
+          icon: "fa-comments",
+          badge: { en: "Student Council", ar: "الاتحاد الطلابي" },
+          title: { en: "School Social Committee Rapporteur", ar: "مقرر اللجنة الاجتماعية بالمدرسة" },
+          points: {
+            en: [
+              "Representing students and communicating their ideas to administration.",
+              "Coordinating effectively with class social coordinators.",
+              "Participating in organizing school-wide events and initiatives."
+            ],
+            ar: [
+              "تمثيل الطلاب ونقل أفكارهم ومقترحاتهم لإدارة المدرسة.",
+              "التنسيق المستمر مع المنسقين الاجتماعيين للفصول.",
+              "المشاركة الفعالة في تنظيم الفعاليات والمبادرات المدرسية."
+            ]
+          }
+        },
+        {
+          icon: "fa-futbol",
+          badge: { en: "Sports Leadership", ar: "القيادة الرياضية" },
+          title: { en: "School Sports Rapporteur", ar: "مقرر اللجنة الرياضية بالمدرسة" },
+          points: {
+            en: [
+              "Organizing school sports activities and tournaments.",
+              "Coordinating football competitions and inter-class matches.",
+              "Contributing proposals for structured sports breaks."
+            ],
+            ar: [
+              "تنظيم الأنشطة والبطولات الرياضية بالمدرسة.",
+              "تنسيق مسابقات كرة القدم والمباريات بين الفصول.",
+              "تقديم مقترحات لتنظيم فترات الراحة الرياضية للطلاب."
+            ]
+          }
+        },
+        {
+          icon: "fa-crown",
+          badge: { en: "Community Founder", ar: "مؤسس مجتمع طلابي" },
+          title: { en: "Founder of Bulbuls Community", ar: "مؤسس مجتمع Bulbuls الطلابي" },
+          points: {
+            en: [
+              "Founded and managed the Bulbuls student community within the school.",
+              "Shared school updates and organized collaborative group activities.",
+              "Received official recognition from the school administration."
+            ],
+            ar: [
+              "تأسيس وإدارة مجتمع Bulbuls الطلابي داخل المدرسة.",
+              "مشاركة المستجدات المدرسية وتنظيم الأنشطة الجماعية.",
+              "الحصول على إشادة وتقدير من إدارة المدرسة."
+            ]
+          }
+        }
+      ],
+      initiatives: [
+        {
+          icon: "fa-paint-roller",
+          badge: { en: "Volunteering", ar: "عمل تطوعي" },
+          title: { en: "Day in Love of Our School", ar: "مبادرة يوم في حب مدرستنا" },
+          points: {
+            en: [
+              "Participated in organizing a school-wide volunteer day.",
+              "Activities included classroom improvement, painting, maintenance, and beautification."
+            ],
+            ar: [
+              "المشاركة في تنظيم يوم تطوعي شامل بالمدرسة.",
+              "شملت الأنشطة تحسين الفصول الدراسية والدهانات والصيانة وتجميل المدرسة."
+            ]
+          }
+        },
+        {
+          icon: "fa-landmark",
+          badge: { en: "Cultural Event", ar: "فعالية ثقافية" },
+          title: { en: "Egypt in Our School", ar: "مبادرة مصر في مدرستنا" },
+          points: {
+            en: [
+              "Helped organize a major cultural event celebrating Egyptian heritage.",
+              "Presented Egyptian governorates through cultural displays, food, music, and landmarks."
+            ],
+            ar: [
+              "المساهمة في تنظيم فعالية ثقافية كبرى للاحتفاء بالتراث المصري.",
+              "عرض ثقافات المحافظات المصرية من خلال المعارض والمأكولات والموسيقى."
+            ]
+          }
+        },
+        {
+          icon: "fa-video",
+          badge: { en: "Media & Sports", ar: "إعلام ورياضة" },
+          title: { en: "Student Awareness & Sports Break", ar: "فيديو التوعية ومبادرة النشاط الرياضي" },
+          points: {
+            en: [
+              "Selected as one of four presenters in a parent awareness video on weekly student progress.",
+              "Co-authored a proposal for structured break activities (football, chess, handball)."
+            ],
+            ar: [
+              "المشاركة كأحد أربعة مقدمين في فيديو توعوي لأولياء الأمور حول التقدم الأسبوعي للطلاب.",
+              "المساهمة في مقترح تنظيم أنشطة الفسحة (كرة القدم، الشطرنج، كرة اليد)."
+            ]
+          }
+        }
+      ],
+      sports: [
+        {
+          icon: "fa-trophy",
+          badge: { en: "Champions • 8 Pts", ar: "البطل • 8 نقاط" },
+          title: { en: "Bulbuls FC — League Champions", ar: "Bulbuls FC — أبطال دوري المدرسة" },
+          points: {
+            en: [
+              "Finished 1st in the group stage (8 points) and won the Championship Final.",
+              "Group results: 2–0 vs ES, 2–0 vs Senior, 1–1 vs The Weakest, 0–0 vs Junior."
+            ],
+            ar: [
+              "تصدر مرحلة المجموعات برصيد 8 نقاط والفوز بالمباراة النهائية للبطولة.",
+              "نتائج المجموعات: 2–0 ضد ES، 2–0 ضد Senior، 1–1 ضد The Weakest، 0–0 ضد Junior."
+            ]
+          }
+        },
+        {
+          icon: "fa-medal",
+          badge: { en: "Runner-Up", ar: "المركز الثاني" },
+          title: { en: "B4 Camp Competition", ar: "معسكر B4 التنافسي" },
+          points: {
+            en: [
+              "Participated as an active member of Team B4.",
+              "Achieved 2nd place overall, finishing just a single point behind the winner."
+            ],
+            ar: [
+              "المشاركة كعضو فاعل ضمن فريق B4.",
+              "تحقيق المركز الثاني بفارق نقطة واحدة فقط عن المركز الأول."
+            ]
+          }
+        },
+        {
+          icon: "fa-person-running",
+          badge: { en: "Endurance", ar: "ألعاب القوى" },
+          title: { en: "Athletics & Distance Running", ar: "ألعاب القوى والجري لمسافات" },
+          points: {
+            en: [
+              "Previous competitive experience in athletics.",
+              "Regular running practice and participation in distance-running activities."
+            ],
+            ar: [
+              "خبرة سابقة في منافسات ألعاب القوى.",
+              "ممارسة الجري بانتظام والمشاركة في فعاليات الجري لمسافات."
+            ]
+          }
+        }
+      ]
+    };
+
+    let currentLang = localStorage.getItem('hamza_lang') || 'en';
+    let currentFilter = 'all';
+    let currentAchTab = 'leadership';
+    let threeWireframeMat = null;
+
+    // Theme Initialization
+    function initTheme() {
+      const savedTheme = localStorage.getItem('hamza_theme');
+      const htmlEl = document.documentElement;
+      const iconEl = document.getElementById('theme-icon');
+
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        htmlEl.classList.add('dark');
+        iconEl.className = 'fa-solid fa-sun text-sm text-[#FFD400]';
+      } else {
+        htmlEl.classList.remove('dark');
+        iconEl.className = 'fa-solid fa-moon text-sm';
+      }
+      update3DThemeColors();
+    }
+
+    function toggleTheme() {
+      const htmlEl = document.documentElement;
+      const iconEl = document.getElementById('theme-icon');
+      if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        iconEl.className = 'fa-solid fa-moon text-sm';
+        localStorage.setItem('hamza_theme', 'light');
+      } else {
+        htmlEl.classList.add('dark');
+        iconEl.className = 'fa-solid fa-sun text-sm text-[#FFD400]';
+        localStorage.setItem('hamza_theme', 'dark');
+      }
+      update3DThemeColors();
+    }
+
+    function update3DThemeColors() {
+      if (!threeWireframeMat) return;
+      const isDark = document.documentElement.classList.contains('dark');
+      threeWireframeMat.color.setHex(isDark ? 0xFFD400 : 0x111111);
+      threeWireframeMat.opacity = isDark ? 0.55 : 0.35;
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      localStorage.setItem('hamza_lang', currentLang);
+      applyLanguage();
+    }
+
+    function applyLanguage() {
+      const htmlEl = document.documentElement;
+      htmlEl.setAttribute('lang', currentLang);
+      htmlEl.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+      document.getElementById('lang-label').textContent = currentLang === 'en' ? 'AR' : 'EN';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang] && translations[currentLang][key]) {
+          el.textContent = translations[currentLang][key];
+        }
+      });
+
+      renderInterestsAndStrengths();
+      renderSkills();
+      renderProjects();
+      renderAchievements();
+      renderBlogs();
+      attach3DTiltEffects();
+    }
+
+    function renderInterestsAndStrengths() {
+      document.getElementById('interests-list').innerHTML = interestsData.map(item => `
+        <span class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#F7F7F5] dark:bg-[#09090B] border border-black/[0.08] dark:border-white/[0.08] hover:border-[#FFD400] transition-colors">
+          ${item[currentLang]}
+        </span>
+      `).join('');
+
+      document.getElementById('strengths-list').innerHTML = strengthsData.map(item => `
+        <div class="flex items-center gap-2 text-xs font-semibold p-2.5 rounded-lg bg-[#F7F7F5] dark:bg-[#09090B]">
+          <i class="fa-solid fa-circle-check text-[#8A6D00] dark:text-[#FFD400] shrink-0 text-xs"></i>
+          <span>${item[currentLang]}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderSkills() {
+      document.getElementById('skills-grid').innerHTML = skillsCategories.map(cat => `
+        <div class="tilt-wrapper">
+          <div class="soft-surface tilt-card p-7 h-full">
+            <div class="tilt-inner">
+              <div class="w-12 h-12 rounded-xl bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400] flex items-center justify-center text-lg mb-5 font-bold">
+                <i class="fa-solid ${cat.icon}"></i>
+              </div>
+              <h3 class="text-base font-bold mb-4">${cat.title[currentLang]}</h3>
+              <div class="flex flex-wrap gap-2">
+                ${cat.skills.map(skill => `
+                  <span class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#F7F7F5] dark:bg-[#09090B] border border-black/[0.08] dark:border-white/[0.08]">
+                    ${skill}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterProjects(category) {
+      currentFilter = category;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-filter') === category) {
+          btn.className = 'filter-btn active px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#FFD400] text-black shadow-sm transition-all';
+        } else {
+          btn.className = 'filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all';
+        }
+      });
+      renderProjects();
+      attach3DTiltEffects();
+    }
+
+    function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      const filtered = currentFilter === 'all' ? projectsData : projectsData.filter(p => p.category === currentFilter);
+
+      grid.innerHTML = filtered.map(proj => `
+        <div class="tilt-wrapper h-full">
+          <article class="soft-surface tilt-card flex flex-col justify-between p-7 h-full">
+            <div class="tilt-inner">
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400]">
+                  ${proj.badge ? proj.badge[currentLang] : proj.category}
+                </span>
+                <i class="fa-solid fa-folder-open opacity-40"></i>
+              </div>
+              <h3 class="text-base font-bold mb-2.5">
+                ${proj.title[currentLang]}
+              </h3>
+              <p class="text-sm opacity-75 leading-relaxed mb-6">
+                ${proj.desc[currentLang]}
+              </p>
+            </div>
+            <div class="tilt-inner">
+              <div class="flex flex-wrap gap-1.5 mb-6">
+                ${proj.tags.map(tag => `
+                  <span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded-md bg-[#F7F7F5] dark:bg-[#09090B] border border-black/[0.08] dark:border-white/[0.08] opacity-80">
+                    ${tag}
+                  </span>
+                `).join('')}
+              </div>
+              <button onclick="openProjectDetail('${proj.id}')" class="w-full py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/15 dark:border-white/15 hover:bg-[#FFD400] hover:text-black hover:border-[#FFD400] transition-all flex items-center justify-center gap-2">
+                <span>${translations[currentLang].view_details}</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </button>
+            </div>
+          </article>
+        </div>
+      `).join('');
+    }
+
+    function switchAchievementTab(tab) {
+      currentAchTab = tab;
+      ['leadership', 'initiatives', 'sports'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (t === tab) {
+          el.className = 'ach-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#FFD400] text-black shadow-sm transition-all flex items-center gap-2';
+        } else {
+          el.className = 'ach-tab px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border border-black/10 dark:border-white/10 bg-white dark:bg-[#121215] hover:border-[#FFD400] transition-all flex items-center gap-2';
+        }
+      });
+      renderAchievements();
+      attach3DTiltEffects();
+    }
+
+    function renderAchievements() {
+      const container = document.getElementById('achievements-content');
+      const items = achievementsData[currentAchTab];
+      container.innerHTML = items.map(item => `
+        <div class="tilt-wrapper h-full">
+          <div class="soft-surface tilt-card p-7 h-full">
+            <div class="tilt-inner">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400] flex items-center justify-center text-base font-bold">
+                  <i class="fa-solid ${item.icon}"></i>
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400]">
+                  ${item.badge[currentLang]}
+                </span>
+              </div>
+              <h3 class="text-base font-bold mb-3">${item.title[currentLang]}</h3>
+              <ul class="space-y-2 text-sm opacity-80">
+                ${item.points[currentLang].map(pt => `
+                  <li class="flex items-start gap-2">
+                    <span class="text-[#8A6D00] dark:text-[#FFD400] mt-0.5">•</span>
+                    <span>${pt}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderBlogs() {
+      const grid = document.getElementById('blog-grid');
+      grid.innerHTML = blogData.map(post => `
+        <div class="tilt-wrapper h-full">
+          <article class="soft-surface tilt-card flex flex-col justify-between p-7 h-full">
+            <div class="tilt-inner">
+              <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider opacity-60 mb-3">
+                <span class="text-[#8A6D00] dark:text-[#FFD400]">${post.category}</span>
+                <span>${post.date}</span>
+              </div>
+              <h3 class="text-base font-bold mb-3 leading-snug">${post.title[currentLang]}</h3>
+              <p class="text-sm opacity-75 line-clamp-3 leading-relaxed mb-6">
+                ${post.content[currentLang]}
+              </p>
+            </div>
+            <div class="tilt-inner">
+              <button onclick="openBlogDetail('${post.id}')" class="self-start text-xs font-bold uppercase tracking-wider text-[#8A6D00] dark:text-[#FFD400] hover:underline flex items-center gap-1.5">
+                <span>${translations[currentLang].read_article}</span>
+                <i class="fa-solid fa-arrow-right rtl:rotate-180"></i>
+              </button>
+            </div>
+          </article>
+        </div>
+      `).join('');
+    }
+
+    function openProjectDetail(id) {
+      const proj = projectsData.find(p => p.id === id);
+      if (!proj) return;
+      document.getElementById('detail-modal-body').innerHTML = `
+        <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#FFD400]/20 text-[#8A6D00] dark:text-[#FFD400]">
+          ${proj.badge ? proj.badge[currentLang] : proj.category}
+        </span>
+        <h3 class="text-xl font-black mt-3 mb-3">${proj.title[currentLang]}</h3>
+        <p class="text-sm opacity-80 leading-relaxed mb-4">${proj.desc[currentLang]}</p>
+        <div class="p-4 rounded-xl bg-[#F7F7F5] dark:bg-[#09090B] border border-black/[0.08] dark:border-white/[0.08] text-sm opacity-80 mb-5">
+          ${proj.details ? proj.details[currentLang] : proj.desc[currentLang]}
+        </div>
+        <div class="flex flex-wrap gap-2 mb-6">
+          ${proj.tags.map(t => `<span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-[#F7F7F5] dark:bg-[#09090B] border border-black/[0.08] dark:border-white/[0.08]">${t}</span>`).join('')}
+        </div>
+        <a href="https://github.com/HamzaMoza2009" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#FFD400] text-black hover:bg-[#E5BE00] transition-colors">
+          <i class="fa-brands fa-github"></i>
+          <span>GitHub Profile (@HamzaMoza2009)</span>
+        </a>
+      `;
+      const modal = document.getElementById('detail-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function openBlogDetail(id) {
+      const post = blogData.find(b => b.id === id);
+      if (!post) return;
+      document.getElementById('detail-modal-body').innerHTML = `
+        <div class="flex items-center gap-3 text-xs font-bold uppercase tracking-wider opacity-60 mb-2">
+          <span class="text-[#8A6D00] dark:text-[#FFD400]">${post.category}</span>
+          <span>•</span>
+          <span>${post.date}</span>
+        </div>
+        <h3 class="text-xl font-black mb-4">${post.title[currentLang]}</h3>
+        <div class="text-sm opacity-80 leading-relaxed whitespace-pre-line">
+          ${post.content[currentLang]}
+        </div>
+      `;
+      const modal = document.getElementById('detail-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      document.getElementById('detail-modal').classList.remove('flex');
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('sender-name').value.trim();
+      const email = document.getElementById('sender-email').value.trim();
+      const subject = document.getElementById('sender-subject').value.trim();
+      const message = document.getElementById('sender-message').value.trim();
+
+      const mailtoLink = `mailto:hm2532054@gmail.com?subject=${encodeURIComponent(subject + ' - from ' + name)}&body=${encodeURIComponent(message + '\n\nReply to: ' + email)}`;
+      window.open(mailtoLink, '_blank');
+
+      showToast(currentLang === 'en' ? `Opening email client...` : `جاري فتح البريد الإلكتروني...`);
+      e.target.reset();
+    }
+
+    function copyText(text) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showToast(currentLang === 'en' ? 'Copied to clipboard!' : 'تم النسخ!');
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'soft-surface px-4 py-3 border-[#FFD400] text-xs font-bold uppercase tracking-wider shadow-2xl flex items-center gap-2';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-[#8A6D00] dark:text-[#FFD400]"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.add('hidden');
+    }
+
+    // ==========================================
+    // 3D PERSPECTIVE TILT & GLOW INTERACTION
+    // ==========================================
+    function attach3DTiltEffects() {
+      const isTouch = window.matchMedia('(pointer: coarse)').matches;
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (isTouch || prefersReduced) return;
+
+      document.querySelectorAll('.tilt-card').forEach(card => {
+        if (card.dataset.tiltBound === 'true') return;
+        card.dataset.tiltBound = 'true';
+
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -6;
+          const rotateY = ((x - centerX) / centerX) * 6;
+          card.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        });
+      });
+    }
+
+    // ==========================================
+    // MAGNETIC BUTTON INTERACTION
+    // ==========================================
+    function attachMagneticButtons() {
+      const isTouch = window.matchMedia('(pointer: coarse)').matches;
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (isTouch || prefersReduced) return;
+
+      document.querySelectorAll('.magnetic-btn').forEach(btn => {
+        btn.addEventListener('mousemove', e => {
+          const rect = btn.getBoundingClientRect();
+          const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.18;
+          const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.18;
+          btn.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate3d(0, 0, 0)';
+        });
+      });
+    }
+
+    // ==========================================
+    // THREE.JS INTERACTIVE 3D GEOMETRIC CORE
+    // ==========================================
+    function initHero3DScene() {
+      const container = document.getElementById('three-canvas-container');
+      const stage = document.getElementById('hero-3d-stage');
+      if (!container || typeof THREE === 'undefined') return;
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.z = 5.4;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Group holding the 3D tech sculpture
+      const coreGroup = new THREE.Group();
+      scene.add(coreGroup);
+
+      // Inner solid golden icosahedron
+      const innerGeo = new THREE.IcosahedronGeometry(1.15, 0);
+      const innerMat = new THREE.MeshStandardMaterial({
+        color: 0xFFD400,
+        roughness: 0.28,
+        metalness: 0.45,
+        flatShading: true
+      });
+      const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+      coreGroup.add(innerMesh);
+
+      // Outer wireframe geodesic cage
+      const outerGeo = new THREE.IcosahedronGeometry(1.68, 1);
+      const isDark = document.documentElement.classList.contains('dark');
+      threeWireframeMat = new THREE.MeshBasicMaterial({
+        color: isDark ? 0xFFD400 : 0x111111,
+        wireframe: true,
+        transparent: true,
+        opacity: isDark ? 0.55 : 0.35
+      });
+      const outerMesh = new THREE.Mesh(outerGeo, threeWireframeMat);
+      coreGroup.add(outerMesh);
+
+      // Orbiting torus ring
+      const ringGeo = new THREE.TorusGeometry(2.15, 0.025, 16, 80);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xFFD400,
+        transparent: true,
+        opacity: 0.65
+      });
+      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.rotation.x = Math.PI / 2.6;
+      ringMesh.rotation.y = Math.PI / 6;
+      coreGroup.add(ringMesh);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+      scene.add(ambientLight);
+
+      const keyLight = new THREE.DirectionalLight(0xFFF3B0, 1.3);
+      keyLight.position.set(4, 5, 5);
+      scene.add(keyLight);
+
+      const rimLight = new THREE.PointLight(0xFFD400, 1.4, 12);
+      rimLight.position.set(-4, -3, 3);
+      scene.add(rimLight);
+
+      // Interactive pointer tracking
+      let targetRotX = 0;
+      let targetRotY = 0;
+      let isVisible = true;
+
+      stage.addEventListener('pointermove', e => {
+        const rect = stage.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        targetRotY = nx * 0.75;
+        targetRotX = ny * 0.55;
+      });
+
+      stage.addEventListener('pointerleave', () => {
+        targetRotX = 0;
+        targetRotY = 0;
+      });
+
+      // Pause rendering when hero is scrolled out of view for performance
+      const visObserver = new IntersectionObserver(entries => {
+        isVisible = entries[0].isIntersecting;
+      }, { threshold: 0.05 });
+      visObserver.observe(stage);
+
+      // Responsive Resize
+      window.addEventListener('resize', () => {
+        if (!container.clientWidth || !container.clientHeight) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+
+      // Render Loop
+      const clock = new THREE.Clock();
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!isVisible) return;
+
+        const elapsed = clock.getElapsedTime();
+        if (!prefersReduced) {
+          innerMesh.rotation.y = elapsed * 0.45;
+          innerMesh.rotation.x = elapsed * 0.25;
+          outerMesh.rotation.y = -elapsed * 0.22;
+          ringMesh.rotation.z = elapsed * 0.35;
+          coreGroup.position.y = Math.sin(elapsed * 1.4) * 0.1;
+        }
+
+        coreGroup.rotation.y += (targetRotY - coreGroup.rotation.y) * 0.06;
+        coreGroup.rotation.x += (targetRotX - coreGroup.rotation.x) * 0.06;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    // ==========================================
+    // SCROLL PROGRESS & ACTIVE NAV SPY
+    // ==========================================
+    function initScrollEffects() {
+      const progressBar = document.getElementById('scroll-progress');
+      const sections = document.querySelectorAll('main section[id]');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0) {
+          progressBar.style.width = `${(scrollTop / docHeight) * 100}%`;
+        }
+
+        let currentId = '';
+        sections.forEach(sec => {
+          const top = sec.offsetTop - 160;
+          if (scrollTop >= top) {
+            currentId = sec.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.toggle('active-nav', link.getAttribute('href') === `#${currentId}`);
+        });
+      }, { passive: true });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      applyLanguage();
+      initHero3DScene();
+      attachMagneticButtons();
+      initScrollEffects();
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('active');
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+</html>
